@@ -1,0 +1,124 @@
+# --------------------------
+# Unity
+# --------------------------
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+MemoryCaptures/
+UserSettings/
+Assets/Plugins/Editor/JetBrains*
+.vs/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+.DS_Store
+*.apk
+*.aab
+*.keystore
+*.tmproj
+*.unitypackage
+*.xcworkspace/
+*.xcuserdata/
+*.xcodeproj/project.xcworkspace/
+
+# Rider
+.idea/
+*.sln.iml
+
+# Unity Collab
+.collab/
+
+# Unity Cloud Build
+*.cloud/
+
+# Crash logs
+sysinfo.txt
+
+# --------------------------
+# Python
+# --------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.log
+*.db
+*.sqlite
+*.egg
+*.egg-info/
+*.manifest
+*.spec
+*.coverage
+htmlcov/
+dist/
+build/
+pip-wheel-metadata/
+.eggs/
+.env
+.venv
+env/
+venv/
+ENV/
+.ipynb_checkpoints/
+
+# Jupyter and notebooks
+*.ipynb
+profile_default/
+.ipython/
+
+# PyInstaller
+*.exe
+*.app
+*.deb
+*.rpm
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# --------------------------
+# Mediapipe
+# --------------------------
+# Cache and build
+mediapipe/modules/face_detection/*.pbtxt
+mediapipe/modules/*.pbtxt
+mediapipe/modules/**/*.pbtxt
+mediapipe/.bazel-cache/
+bazel-*
+bazel-bin/
+bazel-out/
+bazel-testlogs/
+bazel-workspace/
+mediapipe/build/
+mediapipe/temp/
+
+# Compiled protobuf
+*.pb.cc
+*.pb.h
+*.pb.go
+*.pb.py
+
+# --------------------------
+# System
+# --------------------------
+*.swp
+*~
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store
