@@ -58,6 +58,7 @@ public class InputManager : MonoBehaviour
                 head.y = -(inputData.head.y - screenHeight / 2);
                 head.mouthOpen = inputData.head.mouth_open;
                 head.active = true;
+                                Debug.Log($"Head position: {head.x}, {head.y}, Mouth open: {head.mouthOpen}");
             }
             else
             {
