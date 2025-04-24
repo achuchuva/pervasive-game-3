@@ -5,6 +5,7 @@ Download this project using GitHub Dekstop.
 Ensure you have python installed on your machine.
 Also have a camera connected up to the computer
 ### Step 3
+(Run the command `pip install -r requirements.txt` to get everything installed first)
 Then in your choice of terminal (I use VS Code's inbuilt one) go `cd PythonFiles` and `python server.py`.
 ### Step 4
 Ensure you have Unity 6000 (latest version when this project was made).
