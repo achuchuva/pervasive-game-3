@@ -10,7 +10,7 @@ context = zmq.Context()
 socket = context.socket(zmq.PUB)
 socket.bind("tcp://*:5555")
 
-WIDTH, HEIGHT = 960, 540
+WIDTH, HEIGHT = 1920, 1080
 
 
 class Hand:
