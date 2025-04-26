@@ -14,7 +14,7 @@ WIDTH, HEIGHT = 1920, 1080
 
 
 class Hand:
-    def __init__(self, landmarks):
+    def __init__(self, landmarks, handedness):
         x_sum, y_sum = 0, 0
         for lm in landmarks.landmark:
             x_sum += lm.x * WIDTH
@@ -22,6 +22,8 @@ class Hand:
         self.x = int(x_sum / 21)
         self.y = int(y_sum / 21)
         self.fist = self.is_fist(landmarks)
+        self.active = True # Flag to indicate that the hand is captured
+        self.hand_type = handedness.classification[0].label
 
     # Check if fingers are folded to form a fist
     def is_fist(self, landmarks):
@@ -50,6 +52,7 @@ class Head:
         self.x = int(x_sum / len(key_indices))
         self.y = int(y_sum / len(key_indices))
         self.mouth_open = self.is_mouth_open(landmarks)
+        self.active = True # Flag to indicate that the head is captured
 
     def is_mouth_open(self, landmarks):
         top_lip = landmarks.landmark[13]
@@ -80,8 +83,8 @@ while True:
 
     _hands = []
     if hand_results.multi_hand_landmarks:
-        for hand_landmarks in hand_results.multi_hand_landmarks:
-            _hands.append(Hand(hand_landmarks))
+        for hand_landmarks, handedness in zip(hand_results.multi_hand_landmarks, hand_results.multi_handedness):
+            _hands.append(Hand(hand_landmarks, handedness))
 
     _head = None
     if face_result.multi_face_landmarks:

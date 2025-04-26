@@ -678,7 +678,6 @@ MonoBehaviour:
   x: 0
   y: 0
   mouthOpen: 0
-  active: 0
   _image: {fileID: 610293365}
   _openMouthSprite: {fileID: 21300000, guid: bdfac7225b5f1624484c91467e0129e7, type: 3}
   _closedMouthSprite: {fileID: 21300000, guid: c1e3636efccf16845ae33d0ebddc2137, type: 3}
@@ -708,13 +707,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1466850366}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 547852163}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 400, y: 0}
@@ -732,10 +731,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1f505c2d1e93f74a9ba32e3d11e24c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  x: 0
+  handType: 1
+  x: 400
   y: 0
   fist: 0
-  active: 0
   _image: {fileID: 1466850369}
   _openHandSprite: {fileID: 21300000, guid: f70545e73e17edb49ac8f846a80c7fce, type: 3}
   _closedHandSprite: {fileID: 21300000, guid: 4323134be1583e74e968e1523d4eba2e, type: 3}
@@ -865,10 +864,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1f505c2d1e93f74a9ba32e3d11e24c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  x: 0
+  handType: 0
+  x: -400
   y: 0
   fist: 0
-  active: 0
   _image: {fileID: 1471015501}
   _openHandSprite: {fileID: 21300000, guid: f70545e73e17edb49ac8f846a80c7fce, type: 3}
   _closedHandSprite: {fileID: 21300000, guid: 4323134be1583e74e968e1523d4eba2e, type: 3}
@@ -917,9 +916,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 610293367}
-  hands:
-  - {fileID: 1471015503}
-  - {fileID: 1466850368}
+  leftHand: {fileID: 1471015503}
+  rightHand: {fileID: 1466850368}
   screenWidth: 1920
   screenHeight: 1080
 --- !u!1660057539 &9223372036854775807

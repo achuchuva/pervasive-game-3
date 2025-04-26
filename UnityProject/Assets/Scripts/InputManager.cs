@@ -10,6 +10,7 @@ public class InputManager : MonoBehaviour
         public float x;
         public float y;
         public bool mouth_open;
+        public bool active;
     }
 
     [System.Serializable]
@@ -18,6 +19,8 @@ public class InputManager : MonoBehaviour
         public float x;
         public float y;
         public bool fist;
+        public bool active;
+        public string hand_type; // "Left" or "Right"
     }
 
     [System.Serializable]
@@ -28,7 +31,8 @@ public class InputManager : MonoBehaviour
     }
 
     public Head head;
-    public List<Hand> hands = new List<Hand>();
+    public Hand leftHand;
+    public Hand rightHand;
     public int screenWidth = 640;
     public int screenHeight = 480;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -50,36 +54,20 @@ public class InputManager : MonoBehaviour
 
         InputData inputData = JsonUtility.FromJson<InputData>(jsonString);
 
-        if (head != null)
+        if (head != null && inputData.head.active)
         {
-            if (inputData.head.x != 0 || inputData.head.y != 0)
-            {
-                head.x = inputData.head.x - screenWidth / 2;
-                head.y = -(inputData.head.y - screenHeight / 2);
-                head.mouthOpen = inputData.head.mouth_open;
-                head.active = true;
-            }
-            else
-            {
-                head.active = false;
-            }
+            head.x = inputData.head.x - screenWidth / 2;
+            head.y = -(inputData.head.y - screenHeight / 2);
+            head.mouthOpen = inputData.head.mouth_open;
         }
 
-        for (int i = 0; i < hands.Count; i++)
+        for (int i = 0; i < inputData.hands.Count; i++)
         {
-            if (i < inputData.hands.Count)
-            {
-                HandData handData = inputData.hands[i];
-                Hand hand = hands[i];
-                hand.active = true;
-                hand.x = handData.x - screenWidth / 2;
-                hand.y = -(handData.y - screenHeight / 2);
-                hand.fist = handData.fist;
-            }
-            else
-            {
-                hands[i].active = false;
-            }
+            HandData handData = inputData.hands[i];
+            Hand hand = (handData.hand_type == "Left") ? leftHand : rightHand;
+            hand.x = handData.x - screenWidth / 2;
+            hand.y = -(handData.y - screenHeight / 2);
+            hand.fist = handData.fist;
         }
     }
 }

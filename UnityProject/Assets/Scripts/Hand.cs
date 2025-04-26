@@ -3,10 +3,15 @@ using UnityEngine.UI;
 
 public class Hand : MonoBehaviour
 {
+    public enum HandType
+    {
+        Left,
+        Right
+    }
+    public HandType handType;
     public float x;
     public float y;
     public bool fist;
-    public bool active;
 
     private RectTransform _rectTransform;
     public Image _image;
@@ -23,15 +28,6 @@ public class Hand : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (active)
-        {
-            _image.enabled = true;
-        }
-        else
-        {
-            _image.enabled = false;
-        }
-
         // Smoothly move the hand to the new position
         Vector2 targetPosition = new Vector2(x, y);
         Vector2 currentPosition = _rectTransform.anchoredPosition;

@@ -6,7 +6,6 @@ public class Head : MonoBehaviour
     public float x;
     public float y;
     public bool mouthOpen;
-    public bool active;
 
     private RectTransform _rectTransform;
     public Image _image;
@@ -23,15 +22,6 @@ public class Head : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (active)
-        {
-            _image.enabled = true;
-        }
-        else
-        {
-            _image.enabled = false;
-        }
-
         // Smoothly move the head to the new position
         Vector2 targetPosition = new Vector2(x, y);
         Vector2 currentPosition = _rectTransform.anchoredPosition;
