@@ -33,8 +33,10 @@ public class InputManager : MonoBehaviour
     public Head head;
     public Hand leftHand;
     public Hand rightHand;
-    public int screenWidth = 640;
-    public int screenHeight = 480;
+    public float cameraWidth = 1920;
+    public float cameraHeight = 1080;
+    public float screenWidth = 20;
+    public float screenHeight = 12;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -56,8 +58,8 @@ public class InputManager : MonoBehaviour
 
         if (head != null && inputData.head.active)
         {
-            head.x = inputData.head.x - screenWidth / 2;
-            head.y = -(inputData.head.y - screenHeight / 2);
+            head.x = inputData.head.x * (screenWidth / cameraWidth) - screenWidth / 2;
+            head.y = -(inputData.head.y * (screenHeight / cameraHeight) - screenHeight / 2);
             head.mouthOpen = inputData.head.mouth_open;
         }
 
@@ -65,8 +67,8 @@ public class InputManager : MonoBehaviour
         {
             HandData handData = inputData.hands[i];
             Hand hand = (handData.hand_type == "Left") ? leftHand : rightHand;
-            hand.x = handData.x - screenWidth / 2;
-            hand.y = -(handData.y - screenHeight / 2);
+            hand.x = handData.x * (screenWidth / cameraWidth) - screenWidth / 2;
+            hand.y = -(handData.y * (screenHeight / cameraHeight) - screenHeight / 2);
             hand.fist = handData.fist;
         }
     }

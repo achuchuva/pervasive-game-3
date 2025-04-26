@@ -58,7 +58,7 @@ class Head:
         top_lip = landmarks.landmark[13]
         bottom_lip = landmarks.landmark[14]
         distance = math.hypot(top_lip.y - bottom_lip.y, top_lip.x - bottom_lip.x)
-        return distance > 0.03
+        return distance > 0.02
 
 
 mp_hands = mp.solutions.hands

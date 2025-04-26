@@ -13,34 +13,32 @@ public class Hand : MonoBehaviour
     public float y;
     public bool fist;
 
-    private RectTransform _rectTransform;
-    public Image _image;
+    public SpriteRenderer _spriteRenderer;
     public Sprite _openHandSprite;
     public Sprite _closedHandSprite;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _rectTransform = GetComponent<RectTransform>();
-        _image = GetComponent<Image>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void LateUpdate()
     {
         // Smoothly move the hand to the new position
-        Vector2 targetPosition = new Vector2(x, y);
-        Vector2 currentPosition = _rectTransform.anchoredPosition;
-        Vector2 newPosition = Vector2.Lerp(currentPosition, targetPosition, Time.deltaTime * 10f); // Adjust the speed as needed
-        _rectTransform.anchoredPosition = newPosition;
+        Vector3 targetPosition = new Vector3(x, y, transform.position.z);
+        Vector3 currentPosition = transform.position;
+        Vector3 newPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * 10f); // Adjust the speed as needed
+        transform.position = newPosition;
 
         if (fist)
         {
-            _image.sprite = _closedHandSprite;
+            _spriteRenderer.sprite = _closedHandSprite;
         }
         else
         {
-            _image.sprite = _openHandSprite;
+            _spriteRenderer.sprite = _openHandSprite;
         }
     }
 }
