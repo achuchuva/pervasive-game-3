@@ -31,6 +31,7 @@ public class Hand : MonoBehaviour
     public LayerMask grabbableLayer; // Layer for objects you can grab
 
     private Enemy grabbedObject = null;
+    public Head head; // Reference to the head script
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -103,6 +104,17 @@ public class Hand : MonoBehaviour
         }
 
         FindFirstObjectByType<CameraShake>().Shake(); // uses default duration/magnitude
+        // Get all the enemies in the scene
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
+        foreach (Enemy enemy in enemies)
+        {
+            enemy.Stun();
+            // Check if the enemy is within a certain distance from the slam position
+            if (Vector2.Distance(enemy.transform.position, slamPosition) < 2f) // Adjust distance as needed
+            {
+                enemy.Die(); // Call the Die method on the enemy
+            }
+        }
     }
 
     void TryGrab()
@@ -122,6 +134,13 @@ public class Hand : MonoBehaviour
             grabbedObject.transform.position = transform.position;
             grabbedObject.enemyGrabController.grabbedBy = transform;
         }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        // Handle damage to the hand here
+        // For example, you can reduce health or play a sound effect
+        head.TakeDamage(damage); // Assuming you have a reference to the head
     }
 
     void Release()

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using System.Collections;
 
 public class Head : MonoBehaviour
 {
@@ -10,15 +11,18 @@ public class Head : MonoBehaviour
     [HideInInspector] public int currentHealth;
     public int maxHealth = 100;
 
-    [HideInInspector] public float laserCharge = 100f;
+    public float maxLaserCharge = 100f;
     [HideInInspector] public float currentLaserCharge;
+    public float laserDuration = 5f; // Duration for laser charge to last
+    public bool laserReady = false; // Flag to check if laser is ready
+    public GameObject laser;
 
     public SpriteRenderer _spriteRenderer;
     public Sprite _openMouthSprite;
     public Sprite _closedMouthSprite;
     public UnityAction OnDeath;
 
-    public float mouthRadius = 2f; // Radius for power-up collection
+    public float mouthRadius = 1f; // Radius for power-up collection
     public LayerMask powerupLayer; // Layer for power-ups
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -27,7 +31,6 @@ public class Head : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         currentHealth = maxHealth; // Initialize health to maxHealth
         currentLaserCharge = 0f;
-        laserCharge = 100f;
     }
 
     // Update is called once per frame
@@ -50,10 +53,16 @@ public class Head : MonoBehaviour
         }
 
         TryGetPowerup(); // Check for power-ups
+
+        if (laserReady && mouthOpen)
+        {
+            FireLaser(); // Fire the laser if it's ready and the mouth is open
+        }
     }
 
     void TryGetPowerup()
     {
+        if (!mouthOpen) return; // Only check for power-ups if the mouth is open
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, mouthRadius, powerupLayer);
         foreach (Collider2D hit in hits)
         {
@@ -77,9 +86,10 @@ public class Head : MonoBehaviour
         {
             case "Laser":
                 currentLaserCharge += 20; // Increase laser charge
-                if (currentLaserCharge > laserCharge)
+                if (currentLaserCharge >= maxLaserCharge)
                 {
-                    currentLaserCharge = laserCharge; // Cap charge at max charge
+                    currentLaserCharge = maxLaserCharge; // Cap charge at max charge
+                    laserReady = true; // Set laser as ready
                 }
                 break;
 
@@ -91,6 +101,27 @@ public class Head : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    void FireLaser()
+    {
+        if (laserReady)
+        {
+            laser.SetActive(true);
+            laserReady = false;
+            StartCoroutine(DrainLaserCharge());
+        }
+    }
+
+    IEnumerator DrainLaserCharge()
+    {
+        while (currentLaserCharge > 0)
+        {
+            currentLaserCharge -= 20f;
+            yield return new WaitForSeconds(1f);
+        }
+
+        laser.SetActive(false);
     }
 
     public void TakeDamage(int damage)

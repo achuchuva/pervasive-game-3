@@ -11,6 +11,7 @@ public class EnemyGrabController : MonoBehaviour
     private EnemyGun enemyGun;
     private Enemy enemy;
     private Hand hand;
+    public bool stunned = false;
 
     void Start()
     {
@@ -48,6 +49,7 @@ public class EnemyGrabController : MonoBehaviour
         else
         {
             spriteRenderer.color = Color.white;
+            if (stunned) return;
 
             if (walker != null)
             {

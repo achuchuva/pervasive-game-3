@@ -13,6 +13,9 @@ public class GameUIManager : MonoBehaviour
     public TextMeshProUGUI laserText;
     public GameObject laserTextReady;
 
+    public TextMeshProUGUI scoreText; // Assuming you are using TextMeshPro for better text rendering
+    private int score = 0; // Initialize score to 0
+
     void Start()
     {
         if (head == null)
@@ -23,7 +26,7 @@ public class GameUIManager : MonoBehaviour
         healthSlider.maxValue = head.maxHealth;
         healthSlider.value = head.currentHealth;
 
-        laserSlider.maxValue = head.laserCharge;
+        laserSlider.maxValue = head.maxLaserCharge;
         laserSlider.value = head.currentLaserCharge;
 
         head.OnDeath += ShowGameOver;
@@ -36,7 +39,7 @@ public class GameUIManager : MonoBehaviour
 
         laserSlider.value = head.currentLaserCharge;
         laserText.text = head.currentLaserCharge.ToString();
-        if (head.currentLaserCharge >= head.laserCharge)
+        if (head.currentLaserCharge >= head.maxLaserCharge)
         {
             laserTextReady.SetActive(true);
         }
@@ -49,5 +52,13 @@ public class GameUIManager : MonoBehaviour
     void ShowGameOver()
     {
         gameOverPanel.SetActive(true);
+    }
+
+    public void EnemyDied(int scoreIncrement)
+    {
+        // Update the score or perform any other actions when an enemy dies
+        // For example, you can increase the score and update the UI
+        score += scoreIncrement;
+        scoreText.text = "Score: " + score.ToString(); // Update the score text
     }
 }
