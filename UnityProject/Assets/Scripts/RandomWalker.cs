@@ -10,14 +10,28 @@ public class RandomWalker : MonoBehaviour
     private Vector2 target;
     private float waitTimer = 0f;
     private bool moving = false;
+    private float originalSpeed;
 
     void Start()
     {
         PickNewTarget();
+        originalSpeed = speed; // Store the original speed
     }
 
     void Update()
     {
+        // Check if the postion is within the defined area
+        if (transform.position.x < areaMin.x || transform.position.x > areaMax.x || transform.position.y < areaMin.y || transform.position.y > areaMax.y)
+        {
+            // Temporarily increase speed to move back into the area
+            speed = 12f;
+            waitTimer = 0f; // Reset wait timer to avoid waiting when out of bounds
+        }
+        else
+        {
+            speed = originalSpeed; // Reset speed to original
+        }
+
         if (moving)
         {
             transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);

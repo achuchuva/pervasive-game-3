@@ -17,6 +17,21 @@ public class Hand : MonoBehaviour
     public Sprite _openHandSprite;
     public Sprite _closedHandSprite;
 
+    public bool grabbing;
+
+    public float slamVelocityThreshold = 10f; // Tune this for how "hard" the slam needs to be
+    public LayerMask terrainLayer;            // Set in Inspector: Layer that represents the stage/terrain
+    public float slamCheckDistance = 0.5f;     // How far below to check for stage collision
+    public GameObject slamEffectPrefab;        // Prefab for the slam effect (e.g., particles, camera shake)
+
+    private Vector2 lastPosition;
+    private Vector2 velocity;
+
+    public float grabRadius = 2f;
+    public LayerMask grabbableLayer; // Layer for objects you can grab
+
+    private Enemy grabbedObject = null;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,9 +42,9 @@ public class Hand : MonoBehaviour
     void LateUpdate()
     {
         // Smoothly move the hand to the new position
-        Vector3 targetPosition = new Vector3(x, y, transform.position.z);
-        Vector3 currentPosition = transform.position;
-        Vector3 newPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * 10f); // Adjust the speed as needed
+        Vector2 targetPosition = new Vector2(x, y);
+        Vector2 currentPosition = transform.position;
+        Vector2 newPosition = Vector2.Lerp(currentPosition, targetPosition, Time.deltaTime * 10f); // Adjust the speed as needed
         transform.position = newPosition;
 
         if (fist)
@@ -40,5 +55,88 @@ public class Hand : MonoBehaviour
         {
             _spriteRenderer.sprite = _openHandSprite;
         }
+
+        // Track velocity manually
+        currentPosition = transform.position;
+        velocity = (currentPosition - lastPosition) / Time.deltaTime;
+        lastPosition = currentPosition;
+
+        DetectSlam();
+
+        if (fist)
+        {
+            if (grabbedObject == null)
+            {
+                TryGrab();
+            }
+            else
+            {
+                HoldGrabbedObject();
+            }
+        }
+        else
+        {
+            Release();
+        }
+    }
+
+    void DetectSlam()
+    {
+        if (velocity.y < -slamVelocityThreshold && fist) // Must be moving down fast
+        {
+            // Raycast downward to check if near the stage
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, slamCheckDistance, terrainLayer);
+            if (hit.collider != null)
+            {
+                SlamEffect(hit.point);
+            }
+        }
+    }
+
+    void SlamEffect(Vector2 slamPosition)
+    {
+        // TODO: spawn particles, camera shake, sound effects, etc.
+        if (slamEffectPrefab != null)
+        {
+            GameObject effect = Instantiate(slamEffectPrefab, slamPosition, Quaternion.identity);
+            Destroy(effect, 3f); // Destroy the effect after 3 seconds
+        }
+
+        FindFirstObjectByType<CameraShake>().Shake(); // uses default duration/magnitude
+    }
+
+    void TryGrab()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, grabRadius, grabbableLayer);
+        if (hits.Length > 0)
+        {
+            grabbedObject = hits[0].GetComponent<Enemy>();
+            grabbedObject.enemyGrabController.grabbedBy = transform;
+        }
+    }
+
+    void HoldGrabbedObject()
+    {
+        if (grabbedObject != null)
+        {
+            grabbedObject.transform.position = transform.position;
+            grabbedObject.enemyGrabController.grabbedBy = transform;
+        }
+    }
+
+    void Release()
+    {
+        if (grabbedObject != null)
+        {
+            grabbedObject.enemyGrabController.grabbedBy = null;
+            grabbedObject = null;
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        // Visualize grab range
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, grabRadius);
     }
 }

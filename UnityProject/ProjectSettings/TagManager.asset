@@ -7,15 +7,17 @@ TagManager:
   - Enemy
   - Head
   - Hand
+  - Ground
+  - Powerup
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
-  - 
-  - 
+  - Enemy
+  - Powerup
   - PostProcessing
   - 
   - 

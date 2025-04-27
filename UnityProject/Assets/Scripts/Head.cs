@@ -10,16 +10,24 @@ public class Head : MonoBehaviour
     [HideInInspector] public int currentHealth;
     public int maxHealth = 100;
 
+    [HideInInspector] public float laserCharge = 100f;
+    [HideInInspector] public float currentLaserCharge;
+
     public SpriteRenderer _spriteRenderer;
     public Sprite _openMouthSprite;
     public Sprite _closedMouthSprite;
     public UnityAction OnDeath;
+
+    public float mouthRadius = 2f; // Radius for power-up collection
+    public LayerMask powerupLayer; // Layer for power-ups
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         currentHealth = maxHealth; // Initialize health to maxHealth
+        currentLaserCharge = 0f;
+        laserCharge = 100f;
     }
 
     // Update is called once per frame
@@ -39,6 +47,49 @@ public class Head : MonoBehaviour
         else
         {
             _spriteRenderer.sprite = _closedMouthSprite;
+        }
+
+        TryGetPowerup(); // Check for power-ups
+    }
+
+    void TryGetPowerup()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, mouthRadius, powerupLayer);
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.CompareTag("Powerup"))
+            {
+                PowerUp powerUp = hit.GetComponent<PowerUp>();
+                if (powerUp != null)
+                {
+                    string powerUpName = powerUp.powerUpName;
+                    HandlePowerUp(powerUpName);
+                    Destroy(hit.gameObject); // Remove the power-up after collecting it
+                }
+            }
+        }
+    }
+
+    void HandlePowerUp(string powerUpName)
+    {
+        // Example power-up actions based on the name
+        switch (powerUpName)
+        {
+            case "Laser":
+                currentLaserCharge += 20; // Increase laser charge
+                if (currentLaserCharge > laserCharge)
+                {
+                    currentLaserCharge = laserCharge; // Cap charge at max charge
+                }
+                break;
+
+            case "Health":
+                currentHealth += 20; // Heal the head
+                if (currentHealth > maxHealth)
+                {
+                    currentHealth = maxHealth; // Cap health at maxHealth
+                }
+                break;
         }
     }
 

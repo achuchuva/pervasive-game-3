@@ -4,40 +4,32 @@ public class EnemyGrabController : MonoBehaviour
 {
     public float grabDuration = 2f;
     private float grabTimer = 0f;
-    private bool isGrabbed = false;
 
-    private Transform grabbedBy;
+    public Transform grabbedBy { get; set; }
     [SerializeField] private SpriteRenderer spriteRenderer;
     private RandomWalker walker;
     private EnemyGun enemyGun;
+    private Enemy enemy;
     private Hand hand;
 
     void Start()
     {
         walker = GetComponent<RandomWalker>();
         enemyGun = GetComponentInChildren<EnemyGun>();
+        enemy = GetComponent<Enemy>();
     }
 
     void Update()
     {
-        if (isGrabbed && grabbedBy != null)
+        if (grabbedBy != null)
         {
-            if (hand == null || !hand.fist)
+            if (walker != null)
             {
-                isGrabbed = false;
-                grabbedBy = null;
-                spriteRenderer.color = Color.white;
-
-                if (walker != null)
-                {
-                    walker.enabled = true;
-                }
-
-                if (enemyGun != null)
-                {
-                    enemyGun.enabled = true;
-                }
-                return;
+                walker.enabled = false;
+            }
+            if (enemyGun != null)
+            {
+                enemyGun.enabled = false;
             }
 
             // Follow the hand
@@ -50,74 +42,22 @@ public class EnemyGrabController : MonoBehaviour
 
             if (grabTimer >= grabDuration)
             {
-                Die();
+                enemy.Die(); // Call the Die method on the enemy
             }
         }
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        CheckGrabbed(other);
-    }
-
-    void OnTriggerStay2D(Collider2D other)
-    {
-        CheckGrabbed(other);
-    }
-
-    void CheckGrabbed(Collider2D other)
-    {
-        if (isGrabbed) return;
-
-        if (other.CompareTag("Hand"))
+        else
         {
-            hand = other.GetComponent<Hand>();
-            if (hand != null && hand.fist)
+            spriteRenderer.color = Color.white;
+
+            if (walker != null)
             {
-                grabbedBy = other.transform;
-                isGrabbed = true;
-                grabTimer = 0f;
+                walker.enabled = true;
+            }
 
-                if (walker != null)
-                {
-                    walker.enabled = false;
-                }
-
-                if (enemyGun != null)
-                {
-                    enemyGun.enabled = false;
-                }
+            if (enemyGun != null)
+            {
+                enemyGun.enabled = true;
             }
         }
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Hand"))
-        {
-            hand = other.GetComponent<Hand>();
-            if (hand != null && hand.fist && isGrabbed)
-            {
-                grabbedBy = null;
-                isGrabbed = false;
-                spriteRenderer.color = Color.white;
-
-                if (walker != null)
-                {
-                    walker.enabled = true;
-                }
-
-                if (enemyGun != null)
-                {
-                    enemyGun.enabled = true;
-                }
-            }
-        }
-    }
-
-    void Die()
-    {
-        // Optional: play effect here
-        Destroy(gameObject);
     }
 }
