@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviour
                 Destroy(bombExplosion, 2f); // Destroy the explosion effect after 2 seconds
             }
             // Check if hand is nearby and apply damage
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 2f); // Adjust radius as needed
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1f); // Adjust radius as needed
             foreach (Collider2D collider in colliders)
             {
                 if (collider.CompareTag("Hand")) // Assuming the hand has a tag "Hand"
@@ -75,7 +75,7 @@ public class Enemy : MonoBehaviour
         }
 
         // Find the GameUIManager and call the EnemyDied method
-        GameUIManager gameUIManager = FindObjectOfType<GameUIManager>();
+        GameUIManager gameUIManager = FindFirstObjectByType<GameUIManager>();
         if (gameUIManager != null)
         {
             int scoreIncrement = 10; // Default score increment

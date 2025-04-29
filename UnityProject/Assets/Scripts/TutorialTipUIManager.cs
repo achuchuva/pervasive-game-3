@@ -39,4 +39,11 @@ public class TutorialTipUIManager : MonoBehaviour
             yield return new WaitForSeconds(timeBetweenTips);
         }
     }
+
+    public void OverrideTutorial()
+    {
+        StopAllCoroutines(); // Stop the current tip routine
+        tipPanel.SetActive(false); // Hide the tip panel
+        currentTipIndex = tips.Length; // Skip to the end of the tips
+    }
 }

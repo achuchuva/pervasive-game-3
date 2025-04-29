@@ -14,6 +14,7 @@ public class GameUIManager : MonoBehaviour
     public GameObject laserTextReady;
 
     public TextMeshProUGUI scoreText; // Assuming you are using TextMeshPro for better text rendering
+    public TextMeshProUGUI scoreTextGameOver; // Assuming you are using TextMeshPro for better text rendering
     private int score = 0; // Initialize score to 0
 
     void Start()
@@ -60,5 +61,6 @@ public class GameUIManager : MonoBehaviour
         // For example, you can increase the score and update the UI
         score += scoreIncrement;
         scoreText.text = "Score: " + score.ToString(); // Update the score text
+        scoreTextGameOver.text = "Score: " + score.ToString(); // Update the score text in the game over panel
     }
 }

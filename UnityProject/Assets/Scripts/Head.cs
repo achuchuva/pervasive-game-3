@@ -22,8 +22,13 @@ public class Head : MonoBehaviour
     public Sprite _closedMouthSprite;
     public UnityAction OnDeath;
 
+    public AudioSource audioSource;
+    public AudioClip damageSound;
+    public AudioClip eatSound;
+
     public float mouthRadius = 1f; // Radius for power-up collection
     public LayerMask powerupLayer; // Layer for power-ups
+    private Animator _animator;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,6 +36,11 @@ public class Head : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         currentHealth = maxHealth; // Initialize health to maxHealth
         currentLaserCharge = 0f;
+        _animator = GetComponent<Animator>();
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
     }
 
     // Update is called once per frame
@@ -81,6 +91,11 @@ public class Head : MonoBehaviour
 
     void HandlePowerUp(string powerUpName)
     {
+        if (audioSource != null && eatSound != null)
+        {
+            audioSource.PlayOneShot(eatSound); // Play sound effect
+        }
+
         // Example power-up actions based on the name
         switch (powerUpName)
         {
@@ -127,9 +142,21 @@ public class Head : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        // Play sound effect
+        if (audioSource != null && damageSound != null)
+        {
+            audioSource.PlayOneShot(damageSound);
+        }
+        // Run animation
+        if (_animator != null)
+        {
+            _animator.SetTrigger("TakeDamage");
+        }
         if (currentHealth <= 0)
         {
+            laser.SetActive(false); // Deactivate laser if health is zero
             OnDeath?.Invoke();
+            FindFirstObjectByType<GameOverManager>().TriggerGameOver(); // Show game over screen
         }
     }
 }

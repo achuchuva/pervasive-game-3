@@ -30,8 +30,14 @@ public class Hand : MonoBehaviour
     public float grabRadius = 2f;
     public LayerMask grabbableLayer; // Layer for objects you can grab
 
+    public AudioSource audioSource;
+    public AudioClip slamSound;
+
     private Enemy grabbedObject = null;
     public Head head; // Reference to the head script
+
+    private float slamCooldown = 1f; // 1 second cooldown
+    private float lastSlamTime = -999f; // Time when last slam happened
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -85,11 +91,16 @@ public class Hand : MonoBehaviour
     {
         if (velocity.y < -slamVelocityThreshold && fist) // Must be moving down fast
         {
+            // Check cooldown
+            if (Time.time - lastSlamTime < slamCooldown) 
+                return; // Not enough time passed
+
             // Raycast downward to check if near the stage
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, slamCheckDistance, terrainLayer);
             if (hit.collider != null)
             {
                 SlamEffect(hit.point);
+                lastSlamTime = Time.time; // Update the last slam time
             }
         }
     }
@@ -104,6 +115,12 @@ public class Hand : MonoBehaviour
         }
 
         FindFirstObjectByType<CameraShake>().Shake(); // uses default duration/magnitude
+
+        if (audioSource != null && slamSound != null)
+        {
+            audioSource.PlayOneShot(slamSound); // Play slam sound
+        }
+
         // Get all the enemies in the scene
         Enemy[] enemies = FindObjectsOfType<Enemy>();
         foreach (Enemy enemy in enemies)

@@ -7,34 +7,42 @@ public class EnemySpawner : MonoBehaviour
     public class EnemyType
     {
         public GameObject prefab;
-        public float spawnWeight = 1f; // Higher = more likely to spawn
+        public float spawnWeight = 1f;         // Starting spawn weight
+        public float weightIncreasePerTick = 0f; // How much this enemy's weight grows over time
     }
 
-    public List<EnemyType> enemies; // List of enemy types
+    public List<EnemyType> enemies;
     public Transform[] spawnPoints;
     public float spawnInterval = 5f;
-    public int enemiesPerSpawn = 1; // Start with 1 enemy, increase over time
-    public float increaseInterval = 20f; // Every 20 seconds, increase enemiesPerSpawn by 1
+    public int enemiesPerSpawn = 1;
+    public float increaseInterval = 20f; // Time to increase enemiesPerSpawn
+    public float weightIncreaseInterval = 10f; // Time to increase enemy weights
 
-    private float timer = 0f;
+    public AudioSource audioSource;
+    public AudioClip spawnSound; // Sound to play when spawning enemies
+
+    private float spawnTimer = 0f;
     private float difficultyTimer = 0f;
+    private float weightTimer = 0f;
 
     void Start()
     {
         FindFirstObjectByType<Head>().OnDeath += () => enabled = false;
-        timer = spawnInterval;
+        spawnTimer = spawnInterval;
         difficultyTimer = increaseInterval;
+        weightTimer = weightIncreaseInterval;
     }
 
     void Update()
     {
-        timer -= Time.deltaTime;
+        spawnTimer -= Time.deltaTime;
         difficultyTimer -= Time.deltaTime;
+        weightTimer -= Time.deltaTime;
 
-        if (timer <= 0f)
+        if (spawnTimer <= 0f)
         {
             SpawnEnemies();
-            timer = spawnInterval;
+            spawnTimer = spawnInterval;
         }
 
         if (difficultyTimer <= 0f)
@@ -42,10 +50,21 @@ public class EnemySpawner : MonoBehaviour
             enemiesPerSpawn++;
             difficultyTimer = increaseInterval;
         }
+
+        if (weightTimer <= 0f)
+        {
+            IncreaseEnemyWeights();
+            weightTimer = weightIncreaseInterval;
+        }
     }
 
     void SpawnEnemies()
     {
+        if (audioSource != null && spawnSound != null)
+        {
+            audioSource.PlayOneShot(spawnSound); // Play spawn sound
+        }
+
         if (spawnPoints.Length < 1 || enemies.Count < 1) return;
 
         for (int i = 0; i < enemiesPerSpawn; i++)
@@ -83,5 +102,13 @@ public class EnemySpawner : MonoBehaviour
         }
 
         return enemies[0].prefab; // Fallback
+    }
+
+    void IncreaseEnemyWeights()
+    {
+        foreach (var enemy in enemies)
+        {
+            enemy.spawnWeight += enemy.weightIncreasePerTick;
+        }
     }
 }
