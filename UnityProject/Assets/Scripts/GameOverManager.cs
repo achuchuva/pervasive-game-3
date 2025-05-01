@@ -54,6 +54,8 @@ public class GameOverManager : MonoBehaviour
         }
 
         // Optional: After some time, restore normal time (if you want)
+        yield return new WaitForSecondsRealtime(2f); // Wait for 2 seconds before restoring time
+        AudioListener.volume = 0f; // Mute audio
         Destroy(this);
     }
 

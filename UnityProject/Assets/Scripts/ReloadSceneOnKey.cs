@@ -13,6 +13,7 @@ public class ReloadSceneOnKey : MonoBehaviour
             // Set time to normal
             Time.timeScale = 1f;
             Time.fixedDeltaTime = 0.02f; // Reset fixed delta time to default
+            AudioListener.volume = 1f; // Unmute audio
 
             if (!string.IsNullOrEmpty(sceneName))
             {
